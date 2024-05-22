@@ -8,4 +8,5 @@ export class BaseUserResDto {
   public readonly password: string;
 
   public readonly avatar: string;
+  public readonly age: number;
 }

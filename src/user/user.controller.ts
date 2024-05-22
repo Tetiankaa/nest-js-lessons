@@ -16,9 +16,8 @@ import {
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { BaseUserResDto } from './dto/res/base-user-res.dto';
 import { PrivateUserResDto } from './dto/res/private-user-res.dto';
-import { PublicUserResDto } from "./dto/res/public-user-res,dto";
+import { PublicUserResDto } from './dto/res/public-user-res,dto';
 
 @ApiTags('users')
 @Controller('users')

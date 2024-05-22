@@ -1,6 +1,8 @@
+import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
 import { DocumentBuilder, OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
+
+import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule); // instance of the Nest.js application
@@ -19,11 +21,18 @@ async function bootstrap() {
     .build();
   const document: OpenAPIObject = SwaggerModule.createDocument(app, config); //Swagger documentation
   SwaggerModule.setup('docs', app, document, {
+    // setting up the Swagger documentation
     swaggerOptions: {
       persistAuthorization: true,
     },
-  }); // setting up the Swagger documentation
-
+  });
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  );
   await app.listen(3000, '0.0.0.0', () => {
     console.log('Server running at http://0.0.0.0:3000');
     console.log('Swagger running at http://0.0.0.0:3000/docs');

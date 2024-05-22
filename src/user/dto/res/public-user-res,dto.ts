@@ -5,4 +5,5 @@ export class PublicUserResDto extends PickType(BaseUserResDto, [
   'id',
   'avatar',
   'name',
+  'age'
 ]) {}

@@ -14,6 +14,7 @@ export class UserService {
       name: createUserDto.name,
       password: createUserDto.password,
       avatar: createUserDto.avatar,
+      age: createUserDto.age,
     };
   }
 
@@ -26,6 +27,7 @@ export class UserService {
       id: `${id}`,
       name: 'Naame',
       avatar: 'avatar.png',
+      age: 55,
     };
   }
 
