@@ -8,8 +8,8 @@ import {
   Delete,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { CreateAuthDto } from './dto/req/create-auth.dto';
+import { UpdateAuthDto } from './dto/req/update-auth.dto';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('auth')

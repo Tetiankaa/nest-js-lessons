@@ -1,11 +1,18 @@
 import { ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
 
 import { AppModule } from './app.module';
+import { AppConfig, DatabaseConfig } from './configs/configs.type';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule); // instance of the Nest.js application
+
+  const configService = app.get(ConfigService);
+
+  const appConfig = configService.get<AppConfig>('app');
+  const databaseConfig = configService.get<DatabaseConfig>('database');
 
   const config = new DocumentBuilder() //Swagger documentation configuration
     .setTitle('Users')
@@ -33,9 +40,11 @@ async function bootstrap() {
       transform: true,
     }),
   );
-  await app.listen(3000, '0.0.0.0', () => {
-    console.log('Server running at http://0.0.0.0:3000');
-    console.log('Swagger running at http://0.0.0.0:3000/docs');
+  await app.listen(appConfig.port, appConfig.host, () => {
+    console.log(`Server running at http://${appConfig.host}:${appConfig.port}`);
+    console.log(
+      `Swagger running at http://${appConfig.host}:${appConfig.port}/docs`,
+    );
   });
 }
 bootstrap();
