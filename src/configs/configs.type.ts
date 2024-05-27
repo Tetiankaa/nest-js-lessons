@@ -10,4 +10,7 @@ export type AppConfig = {
 export type DatabaseConfig = {
   port: number;
   host: string;
+  username: string;
+  password: string;
+  db_name: string;
 };

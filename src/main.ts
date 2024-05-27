@@ -12,7 +12,6 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
 
   const appConfig = configService.get<AppConfig>('app');
-  const databaseConfig = configService.get<DatabaseConfig>('database');
 
   const config = new DocumentBuilder() //Swagger documentation configuration
     .setTitle('Users')
