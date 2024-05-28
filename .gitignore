@@ -41,6 +41,11 @@ lerna-debug.log*
 .env.test.local
 .env.production.local
 .env.local
+/environments/.env-postgres
+/environments/.env-s3
+/environments/local.env
+
+docker-compose.db.yaml
 
 # temp directory
 .temp
