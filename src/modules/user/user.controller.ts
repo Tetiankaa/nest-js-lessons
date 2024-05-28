@@ -1,23 +1,24 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
 } from '@nestjs/common';
-import { UserService } from './user.service';
-import { CreateUserReqDto } from './dto/req/create-user-req.dto';
-import { UpdateUserReqDto } from './dto/req/update-user-req.dto';
 import {
   ApiBadRequestResponse,
   ApiForbiddenResponse,
-  ApiOkResponse,
+  ApiNotFoundResponse,
   ApiTags,
 } from '@nestjs/swagger';
+
+import { CreateUserReqDto } from './dto/req/create-user-req.dto';
+import { UpdateUserReqDto } from './dto/req/update-user-req.dto';
 import { PrivateUserResDto } from './dto/res/private-user-res.dto';
 import { PublicUserResDto } from './dto/res/public-user-res,dto';
+import { UserService } from './user.service';
 
 @ApiTags('users')
 @Controller('users')
@@ -39,6 +40,8 @@ export class UserController {
   }
 
   @Get(':id')
+  @ApiBadRequestResponse({ description: ' Bad request' })
+  @ApiNotFoundResponse({ description: 'Not Found' })
   async findOne(@Param('id') id: string): Promise<PublicUserResDto> {
     return await this.userService.findOne(+id);
   }

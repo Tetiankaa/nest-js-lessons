@@ -1,6 +1,7 @@
 export type Configs = {
   app: AppConfig;
   database: DatabaseConfig;
+  sentry: SentryConfig;
 };
 
 export type AppConfig = {
@@ -13,4 +14,8 @@ export type DatabaseConfig = {
   username: string;
   password: string;
   db_name: string;
+};
+export type SentryConfig = {
+  dsn: string;
+  environment: string;
 };

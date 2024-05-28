@@ -1,10 +1,15 @@
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { NestFactory } from '@nestjs/core';
+import {
+  BaseExceptionFilter,
+  HttpAdapterHost,
+  NestFactory,
+} from '@nestjs/core';
 import { DocumentBuilder, OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
+import * as Sentry from '@sentry/node';
 
 import { AppModule } from './app.module';
-import { AppConfig, DatabaseConfig } from './configs/configs.type';
+import { AppConfig } from './configs/configs.type';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule); // instance of the Nest.js application
@@ -12,6 +17,9 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
 
   const appConfig = configService.get<AppConfig>('app');
+
+  const { httpAdapter } = app.get(HttpAdapterHost);
+  Sentry.setupNestErrorHandler(app, new BaseExceptionFilter(httpAdapter));
 
   const config = new DocumentBuilder() //Swagger documentation configuration
     .setTitle('Users')
