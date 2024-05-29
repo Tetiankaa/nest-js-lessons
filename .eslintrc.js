@@ -41,5 +41,5 @@ module.exports = {
       'allowSeparatedGroups': false
     }],
   },
-  ignorePatterns: ['.eslintrc.js', '**/*.generated.ts', '**/migrations/*.ts']
+  ignorePatterns: ['.eslintrc.js', '**/*.generated.ts', '**/migrations/*.ts','**/migrations/*.js']
 };
