@@ -1,14 +1,16 @@
 import { Column, Entity, OneToMany } from 'typeorm';
 
 import { ArticleEntity } from './article.entity';
+import { CommentEntity } from './comment.entity';
 import { ETableName } from './enums/table-name.enum';
+import { FollowEntity } from './follow.entity';
 import { LikeEntity } from './like.entity';
 import { BaseModel } from './models/base.model';
 import { RefreshTokenEntity } from './refresh-token.entity';
 
 @Entity({ name: ETableName.USERS })
 export class UserEntity extends BaseModel {
-  @Column('text', { unique: true })
+  @Column('text')
   email: string;
 
   @Column('text')
@@ -34,4 +36,13 @@ export class UserEntity extends BaseModel {
 
   @OneToMany(() => LikeEntity, (likes) => likes.user)
   likes?: LikeEntity[];
+
+  @OneToMany(() => CommentEntity, (entity) => entity.user)
+  comments?: CommentEntity[];
+
+  @OneToMany(() => FollowEntity, (entity) => entity.user_follower)
+  followers?: FollowEntity[];
+
+  @OneToMany(() => FollowEntity, (entity) => entity.user_following)
+  followings?: FollowEntity[];
 }

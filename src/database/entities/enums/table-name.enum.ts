@@ -4,6 +4,6 @@ export enum ETableName {
   ARTICLES = 'articles',
   LIKES = 'likes',
   TAGS = 'tags',
-  POSTS = 'posts',
+  FOLLOWS = 'follows',
   COMMENTS = 'comments',
 }
