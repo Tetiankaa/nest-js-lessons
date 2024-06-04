@@ -21,4 +21,15 @@ export default (): Configs => ({
     dsn: process.env.SENTRY_DSN,
     environment: process.env.SENTRY_ENVIRONMENT,
   },
+  redis: {
+    port: parseInt(process.env.REDIS_PORT),
+    host: process.env.REDIS_HOST,
+    password: process.env.REDIS_PASSWORD,
+  },
+  jwt: {
+    refresh_expires_in: parseInt(process.env.JWT_REFRESH_EXPIRES_IN),
+    access_expires_in: parseInt(process.env.JWT_ACCESS_EXPIRES_IN),
+    access_secret: process.env.JWT_ACCESS_SECRET,
+    refresh_secret: process.env.JWT_REFRESH_SECRET,
+  },
 });

@@ -17,5 +17,5 @@ export class RefreshTokenEntity extends BaseModel {
 
   @ManyToOne(() => UserEntity, (user) => user.refreshTokens)
   @JoinColumn({ name: 'user_id' })
-  user: UserEntity;
+  user?: UserEntity;
 }

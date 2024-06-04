@@ -17,10 +17,7 @@ export class UserEntity extends BaseModel {
   password: string;
 
   @Column('text')
-  firstName: string;
-
-  @Column('text')
-  lastName: string;
+  name: string;
 
   @Column('text', { nullable: true })
   image?: string;
