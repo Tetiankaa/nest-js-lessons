@@ -3,6 +3,7 @@ import { UserMapper } from '../../user/services/user.mapper';
 import { AuthResDto } from '../dto/res/auth.res.dto';
 import { ITokenPair } from '../interfaces/token.interface';
 import { IUserData } from '../interfaces/user-data.interface';
+import { TokenPairResDto } from "../dto/res/token-pair.res.dto";
 
 export class AuthMapper {
   public static toResponseDTO(
@@ -10,7 +11,7 @@ export class AuthMapper {
     tokenPair: ITokenPair,
   ): AuthResDto {
     return {
-      tokens: tokenPair,
+      tokens: this.toResponseTokenDTO(tokenPair),
       user: UserMapper.toResponseDTO(user),
     };
   }
@@ -21,4 +22,11 @@ export class AuthMapper {
       deviceId,
     };
   }
+  public static toResponseTokenDTO(tokens: ITokenPair): TokenPairResDto {
+    return {
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
+    }
+  }
+
 }

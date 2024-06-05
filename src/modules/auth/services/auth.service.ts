@@ -11,6 +11,8 @@ import { ITokenPair } from '../interfaces/token.interface';
 import { AuthMapper } from './auth.mapper';
 import { AuthCacheService } from './auth-cache.service';
 import { TokenService } from './token.service';
+import { IUserData } from "../interfaces/user-data.interface";
+import { TokenPairResDto } from "../dto/res/token-pair.res.dto";
 
 @Injectable()
 export class AuthService {
@@ -62,6 +64,22 @@ export class AuthService {
     });
     return AuthMapper.toResponseDTO(userForResponse, tokenPair);
   }
+ public async refresh(userData: IUserData): Promise<TokenPairResDto> {
+    const user = await this.userRepository.findOneBy({id: userData.userId});
+    await  this.refreshTokenRepository.delete({deviceId: userData.deviceId, user_id: user.id});
+
+    const generatedTokenPair = await this.generateAndSaveTokenPair(user.id, userData.deviceId)
+    return AuthMapper.toResponseTokenDTO(generatedTokenPair)
+  }
+  public async signOut(userData: IUserData): Promise<void> {
+    await Promise.all([
+      this.refreshTokenRepository.delete({
+        deviceId: userData.deviceId,
+        user_id: userData.userId
+      }),
+      this.authCacheService.deleteAccessToken(userData.userId, userData.deviceId)
+    ])
+  }
   private async generateAndSaveTokenPair(
     userId: string,
     deviceId: string,
@@ -82,4 +100,6 @@ export class AuthService {
     ]);
     return tokenPair;
   }
+
+
 }
