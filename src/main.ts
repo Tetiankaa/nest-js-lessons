@@ -9,6 +9,7 @@ import { DocumentBuilder, OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
 import * as Sentry from '@sentry/node';
 
 import { AppModule } from './app.module';
+import { GlobalExceptionFilter } from './common/http/global-exception.filter';
 import { AppConfig } from './configs/configs.type';
 
 async function bootstrap() {
@@ -20,12 +21,11 @@ async function bootstrap() {
 
   const { httpAdapter } = app.get(HttpAdapterHost);
   Sentry.setupNestErrorHandler(app, new BaseExceptionFilter(httpAdapter));
-
+  app.useGlobalFilters(new GlobalExceptionFilter());
   const config = new DocumentBuilder() //Swagger documentation configuration
     .setTitle('Users')
     .setDescription('The Users API documentation')
     .setVersion('0.1.0')
-    .addTag('users')
     .addBearerAuth({
       type: 'http',
       scheme: 'bearer',
@@ -38,6 +38,8 @@ async function bootstrap() {
     // setting up the Swagger documentation
     swaggerOptions: {
       persistAuthorization: true,
+      docExpansion: 'list',
+      defaultModelsExpandDepth: 2,
     },
   });
   app.useGlobalPipes(
@@ -54,4 +56,4 @@ async function bootstrap() {
     );
   });
 }
-bootstrap();
+void bootstrap();

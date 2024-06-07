@@ -3,15 +3,19 @@ import {
   Catch,
   ExceptionFilter,
   HttpException,
+  Inject,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 
 import { LoggerService } from '../../modules/logger/logger.service';
 
-@Catch()
+@Catch(HttpException)
 export class GlobalExceptionFilter implements ExceptionFilter {
-  constructor(private readonly loggerService: LoggerService) {}
-  catch(exception: unknown, host: ArgumentsHost): any {
+  // constructor(
+  //   private readonly loggerService: LoggerService,
+  // ) {}
+  catch(exception: HttpException, host: ArgumentsHost) {
+    console.log(exception);
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
@@ -26,8 +30,9 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       messages = 'Internal server error';
     }
 
+    // this.loggerService.error(exception);
+
     messages = Array.isArray(messages) ? messages : [messages];
-    this.loggerService.error(exception);
     response.status(status).json({
       messages,
       statusCode: status,

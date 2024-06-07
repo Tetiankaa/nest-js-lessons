@@ -26,6 +26,7 @@ export class BaseUserReqDto {
   @Length(0, 300)
   @ApiProperty({ example: 'example@gmail.com' })
   @Matches(/^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/)
+  @Transform(TransformHelper.toLowerCase)
   email: string;
 
   @ApiProperty({ example: '123qwe!@#QWE' })

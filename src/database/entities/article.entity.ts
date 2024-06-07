@@ -25,7 +25,7 @@ export class ArticleEntity extends BaseModel {
   @Column('text')
   body: string;
 
-  @Column('text')
+  @Column()
   user_id: string;
 
   @ManyToOne(() => UserEntity, (user) => user.articles)
@@ -39,5 +39,5 @@ export class ArticleEntity extends BaseModel {
   tags?: TagEntity[];
 
   @OneToMany(() => CommentEntity, (entity) => entity.article)
-  comments: CommentEntity[];
+  comments?: CommentEntity[];
 }

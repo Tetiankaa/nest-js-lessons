@@ -10,6 +10,7 @@ import { PostgresModule } from './modules/postgres/postgres.module';
 import { RedisModule } from './modules/redis/redis.module';
 import { RepositoryModule } from './modules/repository/repository.module';
 import { UserModule } from './modules/user/user.module';
+import { ArticleModule } from "./modules/article/article.module";
 
 @Module({
   imports: [
@@ -23,13 +24,14 @@ import { UserModule } from './modules/user/user.module';
     RepositoryModule,
     AuthModule,
     RedisModule,
+    ArticleModule,
   ],
   controllers: [],
   providers: [
-    {
-      provide: APP_FILTER,
-      useClass: GlobalExceptionFilter,
-    },
+    // {
+    //   provide: APP_FILTER,
+    //   useClass: GlobalExceptionFilter,
+    // },
   ],
 })
 export class AppModule {}

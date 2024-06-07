@@ -10,11 +10,12 @@ import { Configs, SentryConfig } from '../../configs/configs.type';
 export class LoggerService {
   private isLocal: boolean;
 
-  private readonly logger = new Logger(LoggerService.name);
+  private readonly logger = new Logger();
 
   constructor(private readonly configService: ConfigService<Configs>) {
     const sentryConfig = this.configService.get<SentryConfig>('sentry');
     this.isLocal = sentryConfig.environment === 'local';
+    console.log(this.isLocal);
     Sentry.init({
       dsn: sentryConfig.dsn,
       debug: true,
