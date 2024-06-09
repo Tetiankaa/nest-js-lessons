@@ -9,6 +9,7 @@ export class UserMapper {
       name: user.name,
       image: user.image || null,
       bio: user.bio || null,
+      isFollowed: user.followings ? user.followings.length > 0 : false,
     };
   }
 }

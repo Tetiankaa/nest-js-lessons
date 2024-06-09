@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException, Param } from '@nestjs/common';
 import { In } from 'typeorm';
 
 import { TagEntity } from '../../../database/entities/tag.entity';
@@ -29,6 +29,19 @@ export class ArticleService {
       }),
     );
     return ArticleMapper.toResponseDTO({ ...article, tags });
+  }
+  public async getById(
+    articleId: string,
+    userData: IUserData,
+  ): Promise<ArticleResDto> {
+    const article = await this.articleRepository.findArticleById(
+      articleId,
+      userData,
+    );
+    if (!article) {
+      throw new NotFoundException('Articles was not found');
+    }
+    return ArticleMapper.toResponseDTO(article);
   }
   private async createTags(tags: string[]): Promise<TagEntity[]> {
     if (!tags || tags.length === 0) return [];

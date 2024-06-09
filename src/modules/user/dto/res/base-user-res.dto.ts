@@ -30,4 +30,9 @@ export class BaseUserResDto {
     description: 'The avatar of the User',
   })
   public readonly image?: string;
+
+  @ApiProperty({
+    description: 'The indicator if the user is followed already',
+  })
+  public readonly isFollowed?: boolean;
 }
