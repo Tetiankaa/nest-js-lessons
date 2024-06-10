@@ -8,4 +8,14 @@ export class TagRepository extends Repository<TagEntity> {
   constructor(private readonly dataSource: DataSource) {
     super(TagEntity, dataSource.manager);
   }
+
+  public async getPopular(): Promise<TagEntity[]> {
+    const qb = this.createQueryBuilder('tag');
+    qb.leftJoin('tag.articles', 'article');
+    qb.addSelect('COUNT(article.id)', 'articlesCount');
+    qb.groupBy('tag.id');
+    qb.orderBy('"articlesCount"', 'DESC');
+    qb.limit(10);
+    return await qb.getMany();
+  }
 }
