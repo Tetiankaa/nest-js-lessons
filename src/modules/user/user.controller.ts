@@ -8,16 +8,22 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
+  Put,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
+  ApiConsumes,
   ApiForbiddenResponse,
   ApiNotFoundResponse,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 
+import { ApiFile } from '../../common/decorators/api-file.decorator';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { SkipAuth } from '../auth/decorators/skip-auth.decorator';
 import { IUserData } from '../auth/interfaces/user-data.interface';
@@ -77,6 +83,28 @@ export class UserController {
     @CurrentUser() userData: IUserData,
   ): Promise<void> {
     await this.userService.unfollow(userData, userId);
+  }
+
+  @Post('me/avatar')
+  @ApiBearerAuth()
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
+  @ApiNotFoundResponse({ description: 'Not Found' })
+  @ApiConsumes('multipart/form-data')
+  @ApiFile('avatar', false)
+  @UseInterceptors(FileInterceptor('avatar'))
+  public async uploadAvatar(
+    @CurrentUser() userData: IUserData,
+    @UploadedFile() avatar: Express.Multer.File,
+  ): Promise<void> {
+    await this.userService.uploadAvatar(userData, avatar);
+  }
+
+  @Delete('me/avatar')
+  @ApiBearerAuth()
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
+  @ApiNotFoundResponse({ description: 'Not Found' })
+  public async deleteAvatar(@CurrentUser() userData: IUserData): Promise<void> {
+    await this.userService.deleteAvatar(userData);
   }
   // @Delete("me")
   // @ApiBearerAuth()

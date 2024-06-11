@@ -32,4 +32,12 @@ export default (): Configs => ({
     access_secret: process.env.JWT_ACCESS_SECRET,
     refresh_secret: process.env.JWT_REFRESH_SECRET,
   },
+  aws: {
+    accessKey: process.env.AWS_S3_ACCESS_KEY,
+    bucketName: process.env.AWS_S3_BUCKET_NAME,
+    endpoint: process.env.AWS_S3_ENDPOINT,
+    region: process.env.AWS_S3_REGION,
+    secretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY,
+    bucketUrl: process.env.AWS_S3_BUCKET_URL,
+  },
 });
