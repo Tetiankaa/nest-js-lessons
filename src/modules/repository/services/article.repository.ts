@@ -17,6 +17,9 @@ export class ArticleRepository extends Repository<ArticleEntity> {
     const qb = this.createQueryBuilder('article');
     qb.leftJoinAndSelect('article.tags', 'tag');
     qb.leftJoinAndSelect('article.user', 'user');
+    qb.leftJoinAndSelect('article.likes', 'like', 'like.user_id = :myId', {
+      myId: userData.userId,
+    });
     qb.leftJoinAndSelect(
       'user.followings',
       'follow',
@@ -35,12 +38,16 @@ export class ArticleRepository extends Repository<ArticleEntity> {
     const qb = this.createQueryBuilder('article');
     qb.leftJoinAndSelect('article.tags', 'tag');
     qb.leftJoinAndSelect('article.user', 'user');
+    qb.leftJoinAndSelect('article.likes', 'like', 'like.user_id = :myId', {
+      myId: userData.userId,
+    });
     qb.leftJoinAndSelect(
       'user.followings',
       'follow',
       'follow.follower_id = :myId',
       { myId: userData.userId },
     );
+    // qb.setParameter('myId', userData.userId);
     if (query.tag) {
       qb.andWhere('tag.name = :tag', { tag: query.tag });
     }

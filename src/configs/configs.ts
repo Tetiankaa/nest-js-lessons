@@ -1,10 +1,7 @@
 import * as process from 'node:process';
 
-import * as dotenv from 'dotenv';
-
 import { Configs } from './configs.type';
 
-dotenv.config({ path: './environments/local.env' });
 export default (): Configs => ({
   app: {
     port: parseInt(process.env.APP_PORT) || 3000,

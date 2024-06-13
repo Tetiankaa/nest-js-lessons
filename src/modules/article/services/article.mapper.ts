@@ -15,6 +15,7 @@ export class ArticleMapper {
       createdAt: article.createdAt,
       tags: article.tags ? article.tags.map((tag) => tag.name) : [],
       user: article.user ? UserMapper.toResponseDTO(article.user) : null,
+      isLiked: article.likes?.length > 0,
     };
   }
 

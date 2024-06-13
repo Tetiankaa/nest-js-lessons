@@ -1,4 +1,5 @@
 import {
+  ConflictException,
   ForbiddenException,
   Injectable,
   NotFoundException,
@@ -10,6 +11,7 @@ import { ArticleEntity } from '../../../database/entities/article.entity';
 import { TagEntity } from '../../../database/entities/tag.entity';
 import { IUserData } from '../../auth/interfaces/user-data.interface';
 import { ArticleRepository } from '../../repository/services/article.repository';
+import { LikeRepository } from '../../repository/services/like.repository';
 import { TagRepository } from '../../repository/services/tag.repository';
 import { CreateArticleReqDto } from '../dto/req/create-article.req.dto';
 import { ListArticleReqDto } from '../dto/req/list-article.req.dto';
@@ -17,13 +19,13 @@ import { UpdateArticleReqDto } from '../dto/req/update-article.req.dto';
 import { ArticleResDto } from '../dto/res/article.res.dto';
 import { ArticleListResDto } from '../dto/res/article-list-res.dto';
 import { ArticleMapper } from './article.mapper';
-import { AuthMapper } from "../../auth/services/auth.mapper";
 
 @Injectable()
 export class ArticleService {
   constructor(
     private readonly articleRepository: ArticleRepository,
     private readonly tagRepository: TagRepository,
+    private readonly likeRepository: LikeRepository,
   ) {}
   public async create(
     dto: CreateArticleReqDto,
@@ -95,6 +97,44 @@ export class ArticleService {
     );
     return ArticleMapper.toListResponseDTO(entities, total, query);
   }
+
+  public async like(userData: IUserData, articleId: string): Promise<void> {
+    await this.findArticleByIdOrThrow(articleId);
+    const like = await this.likeRepository.findOneBy({
+      article_id: articleId,
+      user_id: userData.userId,
+    });
+    if (like) {
+      throw new ConflictException('Already liked');
+    }
+    await this.likeRepository.save(
+      this.likeRepository.create({
+        article_id: articleId,
+        user_id: userData.userId,
+      }),
+    );
+  }
+
+  public async unlike(userData: IUserData, articleId: string): Promise<void> {
+    await this.findArticleByIdOrThrow(articleId);
+    const like = await this.likeRepository.findOneBy({
+      article_id: articleId,
+      user_id: userData.userId,
+    });
+    if (!like) {
+      throw new ConflictException('Not liked yet');
+    }
+    await this.likeRepository.remove(like);
+  }
+  private async findArticleByIdOrThrow(
+    articleId: string,
+  ): Promise<ArticleEntity> {
+    const article = await this.articleRepository.findOneBy({ id: articleId });
+    if (!article) {
+      throw new NotFoundException('Article not found');
+    }
+    return article;
+  }
   private async findMyArticleOrThrow(
     userId: string,
     articleId: string,
@@ -110,6 +150,7 @@ export class ArticleService {
     }
     return article;
   }
+
   private async createTags(tags: string[]): Promise<TagEntity[]> {
     if (!tags || tags.length === 0) return [];
 

@@ -5,17 +5,17 @@ import {
   Get,
   HttpCode,
   HttpStatus,
-  Param,
+  Param, ParseUUIDPipe,
   Patch,
   Post,
-  Query,
-} from '@nestjs/common';
+  Query
+} from "@nestjs/common";
 import {
-  ApiBearerAuth,
+  ApiBearerAuth, ApiConflictResponse,
   ApiNotFoundResponse,
   ApiTags,
-  ApiUnauthorizedResponse,
-} from '@nestjs/swagger';
+  ApiUnauthorizedResponse
+} from "@nestjs/swagger";
 
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { SkipAuth } from '../auth/decorators/skip-auth.decorator';
@@ -81,5 +81,29 @@ export class ArticleController {
     @CurrentUser() userData: IUserData,
   ): Promise<void> {
     return await this.articleService.deleteById(id, userData);
+  }
+
+  @ApiConflictResponse({ description: 'Conflict' })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
+  @ApiNotFoundResponse({ description: 'Not Found' })
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Post(':articleId/like')
+  public async like(
+    @CurrentUser() userData: IUserData,
+    @Param('articleId', ParseUUIDPipe) articleId: string,
+  ): Promise<void> {
+    await this.articleService.like(userData, articleId);
+  }
+
+  @ApiConflictResponse({ description: 'Conflict' })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
+  @ApiNotFoundResponse({ description: 'Not Found' })
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Delete(':articleId/like')
+  public async unlike(
+    @CurrentUser() userData: IUserData,
+    @Param('articleId', ParseUUIDPipe) articleId: string,
+  ): Promise<void> {
+    await this.articleService.unlike(userData, articleId);
   }
 }
