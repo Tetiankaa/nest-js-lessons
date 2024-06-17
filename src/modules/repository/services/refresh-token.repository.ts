@@ -10,6 +10,6 @@ export class RefreshTokenRepository extends Repository<RefreshTokenEntity> {
   }
 
   public async isTokenExist(refreshToken: string): Promise<boolean> {
-    return await this.exists({where:{refreshToken}})
+    return await this.exists({ where: { refreshToken } });
   }
 }
